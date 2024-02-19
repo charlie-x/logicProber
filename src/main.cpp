@@ -3,10 +3,26 @@
 // define the pin for the SPI Clock
 
 #define SPI_SCK_PIN (16)
+#define SPI_SS_PIN (17)
 
+#define CLOCK_DELAY delayMicroseconds(10)
 
 // list of GPIO pins to toggle, makes sure SPI_SCK_PIN isn't in here
-const int gpioPins[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14,15,17,18,29,20,21,22,23,24,25,26,27,28,29,30,31};
+const int gpioPinsA[] = {
+  //10,11,12,13,14,
+  //15,16,
+  23,
+
+};
+
+const int gpioPins[] = {
+  0,1,2,3,4,5,6,7,8,9,
+  10,11,12,13,14,15,16,18,19,
+  20,21,22,23,24,25,26,27,28,29,
+  30,31,32,33,34,35,36,37,38,39,
+  40,41,42,43,44,45,46,47,48,49,
+
+};
 
 const int numPins = sizeof(gpioPins) / sizeof(gpioPins[0]);
 void outputWithLeadersAndEncoding();
@@ -15,14 +31,23 @@ void encodeAndOutputPinNumberRS232(int pin, int index);
 void emulateSPIOutput(int pinNumber );
 
 void setup() {
-
+#ifdef SPI_SCK_PIN
   // initialize the clock pin as OUTPUT
   pinMode(SPI_SCK_PIN, OUTPUT);
-  
+  digitalWrite(SPI_SCK_PIN, LOW); // ensure clock starts in idle state
+#endif  
+#ifdef SPI_SS_PIN
+  pinMode(SPI_SS_PIN, OUTPUT);
+  digitalWrite(SPI_SS_PIN, LOW);
+#endif
+
   // initialize all the GPIO pins in the list as OUTPUT
   for(int i = 0; i < numPins; i++) {
     pinMode(gpioPins[i], OUTPUT);
   }
+
+
+
 }
 
 void loop() {
@@ -89,18 +114,26 @@ void encodeAndOutputPinNumberRS232(int pin, int index) {
  */
 void emulateSPIOutput(int pinNumber ) {
 
+
+    digitalWrite(SPI_SS_PIN, HIGH);
+    delayMicroseconds(1);
+
     // simulate SPI transfer for the pin number
     for(int bit = 7; bit >= 0; bit--) {
-
-
       int bitValue = (pinNumber >> bit) & 1;
+
       digitalWrite(pinNumber, bitValue ? HIGH : LOW); 
 
       // toggle the clock (low -> high -> low) to emulate the SPI clock signal
       digitalWrite(SPI_SCK_PIN, LOW); // ensure clock starts in idle state
-      delayMicroseconds(10); // clock low period to prepare for data sampling
+      CLOCK_DELAY; // clock low period to prepare for data sampling
       digitalWrite(SPI_SCK_PIN, HIGH); // data is sampled on this rising edge
-      delayMicroseconds(10); // clock high period to complete the data bit transfer
+      CLOCK_DELAY; // clock high period to complete the data bit transfer
       digitalWrite(SPI_SCK_PIN, LOW); // return to idle state, completing the clock cycle
     }
+    delayMicroseconds(5);
+
+    digitalWrite(SPI_SS_PIN, LOW);
+
+    delayMicroseconds(100);
 }
