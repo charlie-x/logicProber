@@ -7,20 +7,19 @@
 
 #define CLOCK_DELAY delayMicroseconds(10)
 
-// list of GPIO pins to toggle, makes sure SPI_SCK_PIN isn't in here
-const int gpioPinsA[] = {
-  //10,11,12,13,14,
-  //15,16,
-  23,
+// define this to do a pin  0..RANGE instead.
+//#define RANGE   (200)
 
-};
-
+// list of GPIO pins to toggle, makes sure SPI_SS_PIN and SPI_SCK_PIN isn't in here ( spi test routine detects those pins and ignores them)
 const int gpioPins[] = {
   0,1,2,3,4,5,6,7,8,9,
-  10,11,12,13,14,15,16,18,19,
+  10,11,12,13,14,15,18,19,
   20,21,22,23,24,25,26,27,28,29,
   30,31,32,33,34,35,36,37,38,39,
   40,41,42,43,44,45,46,47,48,49,
+  50,51,52,53,54,55,56,57,58,59,
+  60,61,62,63,64,65,66,67,68,69,
+  70,71,72,73,74,75,76,77,78,79,
 
 };
 
@@ -64,11 +63,17 @@ void outputWithLeadersAndEncoding() {
   
   delay(5); // leader signal duration
   
+#ifndef RANGE
   // toggle each pin with its 8-bit encoded index
   for(int i = 0; i < numPins; i++) {
     emulateSPIOutput(gpioPins[i]);
   }
-  
+#else
+  for(int i = 0; i < RANGE; i++) {
+    emulateSPIOutput(i);
+  }
+#endif
+
   delay(5); // leader signal duration
 }
 
@@ -114,9 +119,12 @@ void encodeAndOutputPinNumberRS232(int pin, int index) {
  */
 void emulateSPIOutput(int pinNumber ) {
 
+// don't toggle to these pins
+  if( pinNumber == SPI_SCK_PIN ) return;
+  if( pinNumber == SPI_SS_PIN ) return;
 
     digitalWrite(SPI_SS_PIN, HIGH);
-    delayMicroseconds(1);
+    delayMicroseconds(5);
 
     // simulate SPI transfer for the pin number
     for(int bit = 7; bit >= 0; bit--) {
