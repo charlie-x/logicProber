@@ -26,8 +26,12 @@ DUT with a flying lead probe to check each pin, and SCLK and SS on other known p
 
 ![image](https://github.com/charlie-x/logicProber/assets/2334094/e8856484-654d-433d-87e6-bd98a2b5a036)
 
+
 Pin 31 being probed
+
 ![image](https://github.com/charlie-x/logicProber/assets/2334094/fc31403e-4693-4be1-8e3d-030d4196184d)
 
+
 SPI Setup
-![image](https://github.com/charlie-x/logicProber/assets/2334094/78cf6381-4dc7-4148-b6e8-0326e475f15c)
+
+![image](https://github.com/charlie-x/logicProber/assets/2334094/fb77db75-0b38-4980-b680-8bc240b0e280)
