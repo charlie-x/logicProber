@@ -4,6 +4,9 @@ This is a simple arduino sketch ( in platform.io)  that outputs the arduino pin 
 logic analyser on a pin it'll out the the pins number, on the pin itself. The best mode is SPI , where you just need one known pin for a clock and select, assign those 
 to the SPI decoders CLOCK/SS then the line you are probing with would be the data line, so all you have to do is poke each IO pin and then see what it decodes as
 
+changed it so that the value output is pin number + 1 so its from 1...n instead of 0...n since 0 is no output basically. so remember
+to subtract 1 from the results.
+
 
 Define the arduino wiring pin mapping into the gpioPins array , find a pin for the clock, then run it and probe away.
 
