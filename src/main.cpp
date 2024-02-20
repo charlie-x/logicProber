@@ -119,9 +119,13 @@ void encodeAndOutputPinNumberRS232(int pin, int index) {
  */
 void emulateSPIOutput(int pinNumber ) {
 
+
 // don't toggle to these pins
   if( pinNumber == SPI_SCK_PIN ) return;
   if( pinNumber == SPI_SS_PIN ) return;
+
+// bump the pin number so its 1..n instead of 0...n
+  pinNumber++;
 
     digitalWrite(SPI_SS_PIN, HIGH);
     delayMicroseconds(5);
